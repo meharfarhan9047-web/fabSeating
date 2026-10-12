@@ -60,11 +60,11 @@ export default {
     },
     {
       name: 'galleryImages',
-      title: 'Hero Gallery Images (up to 6)',
+      title: 'Gallery Images',
       type: 'array',
       of: [{ type: 'image' }],
-      description: 'Add up to six images to show in the top gallery for this solution category.',
-      validation: (Rule: any) => Rule.max(6),
+      description: 'First three appear in the hero. Residential also displays the full collection below.',
+      validation: (Rule: any) => Rule.max(30),
     },
     {
       name: 'whatWeDesign',

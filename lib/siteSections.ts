@@ -64,7 +64,7 @@ export async function getSiteSections(): Promise<SiteSections> {
   let raw: Raw = null
   try {
     raw = await client.fetch<Raw>(
-      `*[_type == "homePage"][0] {
+      `*[_type == "homePage" && !(_id in path("drafts.**"))] | order(_id asc)[0] {
         brandPartners[] { name, "logo": logo.asset->url },
         furnitureCategories[] {
           title,

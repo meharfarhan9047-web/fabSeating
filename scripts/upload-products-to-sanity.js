@@ -108,10 +108,11 @@ async function main() {
       title: c.title,
       slug: { _type: 'slug', current: c.slug },
     })
-    for (const p of c.products) {
+    for (let offset = 0; offset < c.products.length; offset += 4) {
+      await Promise.all(c.products.slice(offset, offset + 4).map(async (p) => {
       const id = `product-${c.slug}-${p.slug}`.slice(0, 120)
       done++
-      if (existing.has(id)) continue
+      if (existing.has(id)) return
       const asset = await client.assets.upload('image', fs.createReadStream(p.file), {
         filename: p.filename,
       })
@@ -128,6 +129,7 @@ async function main() {
       })
       added++
       console.log(`  + ${c.title}: ${p.title}`)
+      }))
     }
   }
   console.log(`Done. ${added} new product(s) uploaded, ${done - added} already in Sanity.`)

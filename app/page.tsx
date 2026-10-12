@@ -162,7 +162,8 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col overflow-hidden">
       {/* 1. Hero Section */}
-      <HomeHero 
+      <HomeHero
+        heroPoster={homeContent?.heroImage ? urlFor(homeContent.heroImage)?.width(1600).auto('format').url() : undefined}
         headline={heroHeadline}
         trustIndicators={['Crafted & curated from our Chennai facility', 'Serving residential & commercial spaces across South India']}
         brands={['Premium Quality', '20+ Years Experience', 'Custom Solutions']}

@@ -4,7 +4,7 @@ import type { SanityImage } from '@/types'
 import { cn } from '@/lib/utils'
 
 interface ResponsiveImageProps {
-  image?: SanityImage
+  image?: SanityImage | string
   alt?: string
   className?: string
   priority?: boolean
@@ -28,17 +28,17 @@ export function ResponsiveImage({
 }: ResponsiveImageProps) {
   if (!image) return null
 
-  // Handle direct URL from dummy data
-  if (image.imageUrl) {
-    const src = image.imageUrl
+  // Both Sanity assets and existing local URL images are supported.
+  if (typeof image === 'string' || image.imageUrl) {
+    const src = typeof image === 'string' ? image : image.imageUrl!
     
     if (fill) {
       return (
         <Image
           src={src}
-          alt={alt || image.alt || ''}
+          alt={alt || (typeof image === 'string' ? '' : image.alt) || ''}
           fill
-          className={cn('object-cover', className)}
+          className={cn(objectFit === 'contain' ? 'object-contain' : 'object-cover', className)}
           priority={priority}
           sizes={sizes}
         />
@@ -48,7 +48,7 @@ export function ResponsiveImage({
     return (
       <Image
         src={src}
-        alt={alt || image.alt || ''}
+        alt={alt || (typeof image === 'string' ? '' : image.alt) || ''}
         width={width || 1200}
         height={height || 800}
         className={cn(
@@ -68,15 +68,15 @@ export function ResponsiveImage({
   const imageUrl = urlFor(image)
   if (!imageUrl) return null
 
-  const src = imageUrl.width(fill ? 1920 : width || 1200).height(fill ? 1080 : height || 800).url()
+  const src = imageUrl.width(width || 1600).auto('format').url()
 
   if (fill) {
     return (
       <Image
         src={src}
-        alt={alt || image.alt || ''}
+        alt={alt || (typeof image === 'string' ? '' : image.alt) || ''}
         fill
-        className={cn('object-cover', className)}
+        className={cn(objectFit === 'contain' ? 'object-contain' : 'object-cover', className)}
         priority={priority}
         sizes={sizes}
       />
@@ -86,7 +86,7 @@ export function ResponsiveImage({
   return (
     <Image
       src={src}
-      alt={alt || image.alt || ''}
+      alt={alt || (typeof image === 'string' ? '' : image.alt) || ''}
       width={width || 1200}
       height={height || 800}
       className={cn(

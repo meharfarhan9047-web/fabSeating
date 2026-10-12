@@ -19,6 +19,7 @@ interface HomeHeroProps {
   trustIndicators: string[]
   brands: string[]
   videoUrl?: string
+  heroPoster?: string
   heroVideos?: { src?: string; title?: string; poster?: string }[]
 }
 
@@ -29,6 +30,7 @@ export function HomeHero({
   trustIndicators,
   brands,
   videoUrl,
+  heroPoster,
   heroVideos = [],
 }: HomeHeroProps) {
   const defaultData = {
@@ -39,7 +41,7 @@ export function HomeHero({
   }
 
   const heroData = { ...defaultData, ...data }
-  const fallbackPoster =
+  const fallbackPoster = heroPoster ||
     'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=80'
   
   const defaultHeroVideo = '/hero-video.mp4'

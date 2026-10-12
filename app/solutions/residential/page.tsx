@@ -1,3 +1,5 @@
+import { getSolutionPage } from '@/lib/sanity/queries'
+import { ResponsiveImage } from '@/components/ResponsiveImage'
 import { listImageFiles } from '@/lib/localImages'
 import { Metadata } from 'next'
 import Image from 'next/image'
@@ -7,7 +9,7 @@ import { Section } from '@/components/Section'
 import { generateSEOMetadata } from '@/components/SEOHead'
 import { CONTACT, waLink } from '@/lib/siteContent'
 
-export const revalidate = 3600
+export const revalidate = 300
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Custom Furniture & Home Interiors in Chennai',
@@ -57,15 +59,16 @@ const APPROACH = [
   'Deliver, install, and complete final styling',
 ]
 
-export default function ResidentialPage() {
-  const homes = galleryImages(['gallery/case-study-murugan-kilpauk', 'gallery/case-study-kothari-nungambakkam', 'gallery'], 12)
+export default async function ResidentialPage() {
+  const page = await getSolutionPage('residential')
+  const homes = page?.galleryImages?.length ? page.galleryImages : galleryImages(['gallery/case-study-murugan-kilpauk', 'gallery/case-study-kothari-nungambakkam', 'gallery'], 12)
   const hero = homes.slice(0, 3)
 
   return (
     <>
       <PageHero
-        title="Custom Furniture & Home Interiors Designed Around Your Life"
-        subtitle="Custom furniture in Chennai for homes that need more than just good-looking pieces."
+        title={page?.title || "Custom Furniture & Home Interiors Designed Around Your Life"}
+        subtitle={page?.subtitle || "Custom furniture in Chennai for homes that need more than just good-looking pieces."}
         titleClassName="text-3xl sm:text-4xl md:text-5xl leading-[1.05]"
         contentClassName="max-w-5xl"
       />
@@ -90,7 +93,7 @@ export default function ResidentialPage() {
             <div className="grid gap-6 md:grid-cols-3">
               {hero.map((src, i) => (
                 <div key={i} className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-xl ring-1 ring-black/5">
-                  <Image src={src} alt={`Fab Seating residential project ${i + 1}`} fill className="object-cover" sizes="(max-width:768px) 100vw, 33vw" />
+                  <ResponsiveImage image={src} alt={`Fab Seating residential project ${i + 1}`} fill sizes="(max-width:768px) 100vw, 33vw" />
                 </div>
               ))}
             </div>
@@ -165,10 +168,10 @@ export default function ResidentialPage() {
             <div>
               <h2 className="font-serif text-2xl md:text-3xl font-bold text-primary-950 mb-2 text-center">Homes We&apos;ve Designed</h2>
               <p className="text-center text-gray-600 mb-8">Living room setups, bedrooms, and full home projects.</p>
-              <div className="columns-2 md:columns-3 gap-4 [&>*]:mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {homes.map((src, i) => (
-                  <div key={i} className="relative overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5 break-inside-avoid">
-                    <Image src={src} alt={`Fab Seating home project ${i + 1}`} width={600} height={800} className="w-full h-auto object-cover" />
+                  <div key={i} className="relative aspect-[3/4] overflow-hidden rounded-3xl shadow-md ring-1 ring-black/5">
+                    <ResponsiveImage image={src} alt={`Fab Seating home project ${i + 1}`} fill sizes="(max-width:768px) 100vw, 33vw" />
                   </div>
                 ))}
               </div>

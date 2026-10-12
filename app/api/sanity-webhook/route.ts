@@ -1,26 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import crypto from 'crypto'
+import { parseBody } from 'next-sanity/webhook'
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.text()
-    const signature = req.headers.get('sanity-signature') || ''
-    
-    // Verify webhook signature (optional but recommended)
     const webhookSecret = process.env.SANITY_WEBHOOK_SECRET
     if (webhookSecret) {
-      const hash = crypto
-        .createHmac('sha256', webhookSecret)
-        .update(body)
-        .digest('hex')
-      
-      if (hash !== signature) {
-        return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
-      }
+      const { isValidSignature } = await parseBody(req, webhookSecret)
+      if (!isValidSignature) return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
+    } else {
+      await req.json()
     }
-
-    const data = JSON.parse(body)
 
     // Revalidate every path that shows Sanity content so the live site updates instantly
     const pathsToRevalidate = [
@@ -34,6 +24,7 @@ export async function POST(req: NextRequest) {
     pathsToRevalidate.forEach((path) => revalidatePath(path))
     revalidatePath('/case-studies', 'layout')
     revalidatePath('/blog', 'layout')
+    revalidatePath('/category', 'layout')
 
     // Invalidate all Sanity-backed data so next request fetches fresh content
     revalidateTag('sanity')
@@ -48,6 +39,7 @@ export async function POST(req: NextRequest) {
     revalidateTag('sanity:blogPost')
     revalidateTag('sanity:testimonial')
     revalidateTag('sanity:productCategory')
+    revalidateTag('sanity:product')
 
     return NextResponse.json({ revalidated: true, paths: pathsToRevalidate })
   } catch (error) {

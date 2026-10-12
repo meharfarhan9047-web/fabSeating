@@ -1,3 +1,5 @@
+> Updated CMS/gallery behavior and release steps: see [FABSEATING_COMPLETION.md](./FABSEATING_COMPLETION.md).
+
 # What's Actually Editable from Sanity Studio
 
 ## 🔄 Still seeing the old Studio? (No Homepage, Contact Page, Team, Case Studies?)
