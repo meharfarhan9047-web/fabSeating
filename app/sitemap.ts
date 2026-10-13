@@ -1,14 +1,16 @@
 import { MetadataRoute } from 'next'
-import { getSitemapData } from '@/lib/sanity/queries'
+import { getCaseStudies } from '@/lib/sanity/queries'
 import { getSiteSections } from '@/lib/siteSections'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://fabseating.com'
-  const [data, sections] = await Promise.all([getSitemapData(), getSiteSections()])
+  const [studies, sections] = await Promise.all([getCaseStudies(), getSiteSections()])
 
   const routes = [
     '',
     '/projects',
+    '/case-studies',
+    ...studies.map((study) => `/case-studies/${study.slug.current}`),
     '/contact',
     '/custom-bespoke',
     '/solutions/residential',

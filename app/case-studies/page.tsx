@@ -7,50 +7,9 @@ import { generateSEOMetadata } from '@/components/SEOHead'
 import Link from 'next/link'
 import { AnimatedCard } from '@/components/AnimatedCard'
 
-import { SkeletonCard } from '@/components/SkeletonCard'
 
-// Dummy data for preview when no Sanity data is available
-const dummyCaseStudies = [
-  {
-    _id: 'dummy-1',
-    _type: 'caseStudy',
-    title: 'A Regal Home Transformation in Kilpauk',
-    slug: { current: 'regal-home-kilpauk' },
-    summary: 'Complete furniture and furnishings for a 3-storey residence featuring custom throne chairs and bespoke accent pieces.',
-    industry: 'residential',
-    client: 'Murugan',
-    location: 'Kilpauk, Chennai',
-    year: '2024',
-    // This heroImage will be replaced with Sanity image when uploaded
-    heroImage: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    _id: 'dummy-2',
-    _type: 'caseStudy',
-    title: 'Luxury 4BHK Residence in Nungambakkam',
-    slug: { current: 'luxury-4bhk-nungambakkam' },
-    summary: 'Complete home furniture and furnishings featuring Italian marble dining table, home theatre recliners, and motorized curtains.',
-    industry: 'residential',
-    client: 'Mr. Rajesh Kothari',
-    location: 'Nungambakkam, Chennai',
-    year: '2024',
-    // This heroImage will be replaced with Sanity image when uploaded
-    heroImage: 'https://images.unsplash.com/photo-1524758631624-e2822e304a36?auto=format&fit=crop&w=800&q=80'
-  },
-  {
-    _id: 'dummy-3',
-    _type: 'caseStudy',
-    title: 'Boutique Hotel Lobby',
-    slug: { current: 'boutique-hotel-lobby' },
-    summary: 'Welcoming and elegant seating solutions for hospitality. Coming Soon.',
-    industry: 'hospitality',
-    // This heroImage will be replaced with Sanity image when uploaded
-    heroImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80',
-    comingSoon: true
-  }
-]
 
-export const revalidate = 900
+export const revalidate = 300
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Case Studies',
@@ -63,12 +22,9 @@ interface CaseStudiesPageProps {
 }
 
 export default async function CaseStudiesPage({ searchParams }: CaseStudiesPageProps) {
-  const category = searchParams?.category
-  const projects = await getCaseStudies(category)
-
-  const filteredDummyCaseStudies = category
-    ? dummyCaseStudies.filter((study) => study.industry.toLowerCase() === category.toLowerCase())
-    : dummyCaseStudies
+  const category = searchParams?.category?.trim().toLowerCase() || ''
+  const allProjects = await getCaseStudies()
+  const projects = category ? allProjects.filter((study) => study.industry?.trim().toLowerCase() === category) : allProjects
 
   const categories = [
     { label: 'All', value: '', href: '/case-studies' },
@@ -77,6 +33,8 @@ export default async function CaseStudiesPage({ searchParams }: CaseStudiesPageP
     { label: 'Hospitality', value: 'hospitality', href: '/case-studies?category=hospitality' },
     { label: 'Education', value: 'education', href: '/case-studies?category=education' },
     { label: 'Healthcare', value: 'healthcare', href: '/case-studies?category=healthcare' },
+    { label: 'Retail', value: 'retail', href: '/case-studies?category=retail' },
+    { label: 'Other', value: 'other', href: '/case-studies?category=other' },
   ]
 
   return (
@@ -91,6 +49,7 @@ export default async function CaseStudiesPage({ searchParams }: CaseStudiesPageP
             <Link
               key={cat.value}
               href={cat.href}
+              aria-current={category === cat.value ? 'page' : undefined}
               className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
                 (!category && cat.value === '') || category === cat.value
                   ? 'bg-primary-950 text-white shadow-lg'
@@ -111,12 +70,9 @@ export default async function CaseStudiesPage({ searchParams }: CaseStudiesPageP
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {dummyCaseStudies.map((project, index) => (
-              <AnimatedCard key={project._id} index={index}>
-                <CaseStudyCard project={project as any} index={index} />
-              </AnimatedCard>
-            ))}
+          <div className="py-16 text-center" role="status">
+            <h2 className="font-serif text-2xl text-primary-950">No case studies in this category yet</h2>
+            <Link href="/case-studies" className="mt-4 inline-block text-primary-700 underline">View all case studies</Link>
           </div>
         )}
       </Section>

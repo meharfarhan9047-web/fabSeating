@@ -76,7 +76,7 @@ async function main() {
     return { _type: 'image', asset: { _type: 'reference', _ref: asset._id } }
   }
 
-  const home = (await client.fetch(`*[_type == "homePage"][0]`)) || null
+  const home = (await client.fetch(`*[_type == "homePage" && !(_id in path("drafts.**"))] | order(_id asc)[0]`)) || null
   const homeId = home?._id || 'homePage'
   if (!home) await client.createIfNotExists({ _id: homeId, _type: 'homePage' })
 
@@ -120,7 +120,13 @@ async function main() {
     console.log('Homepage sections already filled in Sanity. Nothing to do.')
     return
   }
-  await client.patch(homeId).set(set).commit()
+  await client.patch(homeId).ifRevisionId(home?._rev).set(set).commit()
+  // Seed the same missing fields on an existing draft so its next publish preserves them.
+  const draft = await client.getDocument(`drafts.${homeId}`)
+  if (draft) {
+    const draftSet = Object.fromEntries(Object.entries(set).filter(([name]) => isEmpty(draft[name])))
+    if (Object.keys(draftSet).length) await client.patch(draft._id).ifRevisionId(draft._rev).set(draftSet).commit()
+  }
   console.log(`Filled: ${fields.join(', ')}`)
 }
 

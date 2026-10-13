@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Montserrat } from 'next/font/google'
 import './globals.css'
 import { Header } from '@/components/Header'
@@ -36,7 +36,6 @@ export const metadata: Metadata = {
   description: 'Fabseating designs, manufactures, and curates premium furniture and furnishings for homes, offices, and hospitality spaces in Chennai since 2001.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://fabseating.com'),
   manifest: '/manifest.json',
-  themeColor: '#2a2520',
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: 'any' },
@@ -75,12 +74,9 @@ export const metadata: Metadata = {
     description: 'Fabseating designs, manufactures, and curates premium furniture and furnishings for homes, offices, and hospitality spaces in Chennai since 2001.',
     images: ['/logo.png'],
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
 }
+
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, maximumScale: 5, themeColor: '#2a2520' }
 
 export default async function RootLayout({
   children,

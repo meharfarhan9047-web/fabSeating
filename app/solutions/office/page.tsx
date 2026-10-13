@@ -76,7 +76,7 @@ export default async function OfficePage() {
       'Production and quality control',
       'Installation and final styling'
     ],
-    bestSuitedFor: 'This makes you sound enterprise-ready. Perfect for corporate offices, co-working spaces, startups, and professional service firms seeking scalable, professional workspace solutions.',
+    bestSuitedFor: 'Perfect for corporate offices, co-working spaces, startups, and professional service firms seeking scalable, professional workspace solutions.',
   }
 
   // Use Sanity data if available, otherwise use fallback

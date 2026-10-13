@@ -270,7 +270,7 @@ export async function getSiteSettings() {
 export async function getHomePageContent() {
   if (!isSanityConfigured()) return null
   return client.fetch(
-    `*[_type == "homePage"][0] {
+    `*[_type == "homePage" && !(_id in path("drafts.**"))] | order(_id asc)[0] {
       heroImage,
       aboutReels[] {
         videoUrl,
@@ -345,7 +345,7 @@ export async function getSolutionPage(
       tagline,
       introText,
       heroImage,
-      galleryImages,
+      "galleryImages": galleryImages[defined(asset)],
       whatWeDesign,
       whyChooseUs,
       approach,
@@ -385,21 +385,23 @@ export async function getCatalogs(): Promise<Catalog[]> {
   )
 }
 
-export type ProductImage = { src: string; title: string }
+export type ProductImage = { id?: string; src: string; title: string; images?: string[] }
 
 /** Product images from Sanity for the given productCategory slugs (used by /category pages). */
 export async function getProductImagesByCategory(categorySlugs: string[]): Promise<ProductImage[]> {
   if (!isSanityConfigured() || categorySlugs.length === 0) return []
   try {
-    const rows = await client.fetch<{ title: string; src: string | null }[]>(
+    const rows = await client.fetch<{ _id: string; title: string; src: string | null; images: string[] }[]>(
       `*[_type == "product" && category->slug.current in $slugs && defined(images[0].asset)] | order(title asc) {
         title,
-        "src": images[0].asset->url
+        _id,
+        "src": images[0].asset->url,
+        "images": images[defined(asset)][].asset->url
       }`,
       { slugs: categorySlugs },
-      { next: { revalidate: 3600, tags: ['sanity', 'sanity:product'] } } as any
+      { next: { revalidate: 300, tags: ['sanity', 'sanity:product'] } } as any
     )
-    return (rows || []).filter((r): r is ProductImage => !!r.src)
+    return (rows || []).flatMap((r) => r.src ? [{ id: r._id, title: r.title, src: r.src, images: (r.images || []).filter(Boolean) }] : [])
   } catch {
     return []
   }

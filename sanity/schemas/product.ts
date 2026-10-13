@@ -36,7 +36,8 @@ export default {
     },
     {
       name: 'images',
-      title: 'Images',
+      title: 'Product images / views',
+      description: 'First image is the main view. Add further views of this same product; visitors can switch using thumbnails.',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
     },

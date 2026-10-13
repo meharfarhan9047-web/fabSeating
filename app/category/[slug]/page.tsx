@@ -1,6 +1,6 @@
 import { listImageFiles } from '@/lib/localImages'
 import { notFound } from 'next/navigation'
-import Image from 'next/image'
+import { ProductGalleryCard } from '@/components/ProductGalleryCard'
 import Link from 'next/link'
 import { Metadata } from 'next'
 import { PageHero } from '@/components/PageHero'
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   })
 }
 
-export const revalidate = 3600
+export const revalidate = 300
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
   const cat = await findCategory(params.slug)
@@ -71,14 +71,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
           {images.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
               {images.map((img) => (
-                <div key={img.src} className="group rounded-2xl overflow-hidden border border-primary-100 bg-white shadow-sm hover:shadow-xl transition-all duration-500">
-                  <div className="relative aspect-square overflow-hidden bg-[#f7f5f0]">
-                    <Image src={img.src} alt={img.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                  </div>
-                  <div className="p-3">
-                    <p className="text-sm font-medium text-primary-900 truncate" title={img.title}>{img.title}</p>
-                  </div>
-                </div>
+                <ProductGalleryCard key={img.src} product={img} />
               ))}
             </div>
           ) : (
