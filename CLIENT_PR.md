@@ -4,6 +4,10 @@ The main Gallery (/projects) still loaded repository photos, and empty category/
 
 This also improves stability without redesigning the site: lazy video playback, mobile-menu lifecycle, service-worker isolation and bounded offline caching, correct enquiry delivery errors, duplicate-submit protection and request cleanup.
 
-Validation: production build including lint/types, eight HTTP route checks, worker/enquiry regression checks and DOM menu/video interaction checks passed. Chromium could not be downloaded, so real-browser visual/overflow/performance-score verification remains pending. Email-provider paths were mocked; actual delivery remains to be verified.
+Validation: production build including lint/types, eight HTTP route checks, worker/enquiry regression checks and DOM menu/video interaction checks passed. Packaged Chromium enabled real-browser testing: 132 broad viewport checks and 32 targeted checks after repairs, plus form and offline-worker interactions. Physical-device and performance-score verification remain pending. Email-provider paths were mocked; actual delivery remains to be verified.
 
 Release: deploy website and updated Sanity Studio. Configure and verify Resend delivery. Six category covers still need client-approved photos.
+
+The recheck also restores Sanity project detail pages instead of redirecting them to missing case studies, adds project/blog sitemap entries, repairs a broken Office stock-image URL and fixes narrow-screen heading, location-label and article-table overflow without redesigning the site.
+
+Final recheck evidence is in RECHECK_REPORT.md, including actual browser thumbnail, menu, offline-worker and form checks. All 68 Gallery photos were verified against live Sanity order. The corrected Office image was verified through the Next optimizer.

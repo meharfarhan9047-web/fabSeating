@@ -73,4 +73,34 @@ async function checkWorker() {
   console.log('PASS worker: RSC/API/admin bypass, bounded cache, offline fallback, scoped cleanup')
 }
 
-Promise.resolve().then(checkEnquiry).then(checkWorker).catch((error) => { console.error(error); process.exitCode = 1 })
+async function checkProjectRoutes() {
+  let project = { _id: 'project-test', title: 'Project Test', slug: { current: 'project-test' }, images: [] }
+  let study = null
+  const output = ts.transpileModule(fs.readFileSync('app/projects/[slug]/page.tsx', 'utf8'), {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2020 },
+  }).outputText
+  const box = {
+    exports: {}, require(name) {
+      if (name === 'react') return { cache: (fn) => fn }
+      if (name === 'react/jsx-runtime') return require('react/jsx-runtime')
+      if (name === 'next/navigation') return { notFound: () => { throw Error('not-found') }, redirect: (path) => { throw Error('redirect:' + path) } }
+      if (name === '@/lib/sanity/queries') return { getProjectBySlug: async () => project, getCaseStudyBySlug: async () => study }
+      if (name === '@/components/SanityCaseStudyView') return { SanityCaseStudyView: () => null }
+      if (name === '@/components/SEOHead') return { generateSEOMetadata: (data) => data }
+      throw Error(name)
+    },
+  }
+  vm.runInNewContext(output, box)
+  const page = () => box.exports.default({ params: { slug: 'project-test' } })
+  const result = await page()
+  assert.equal(result.props.study.title, 'Project Test')
+  assert.equal(result.props.backHref, '/projects')
+  project = null
+  study = { title: 'Existing case study' }
+  await assert.rejects(page, /redirect:\/case-studies\/project-test/)
+  study = null
+  await assert.rejects(page, /not-found/)
+  console.log('PASS project routes: CMS project renders, case-study alias redirects, unknown slug returns not-found')
+}
+
+Promise.resolve().then(checkEnquiry).then(checkWorker).then(checkProjectRoutes).catch((error) => { console.error(error); process.exitCode = 1 })

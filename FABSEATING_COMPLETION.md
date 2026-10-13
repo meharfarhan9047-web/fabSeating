@@ -68,4 +68,8 @@ Category collections and the Residential solution gallery now use Sanity images 
 
 Validation: production Next.js build (including lint/type checks) passed with the published Sanity dataset; eight production routes returned HTTP 200. `node scripts/verify-stability.cjs` passed enquiry and worker regressions. DOM interaction checks passed mobile-menu scroll locking/Escape/desktop resize and lazy video loading/play/pause. No external email was sent.
 
-Limitation: Chromium download failed in this environment, so no rendered mobile/desktop screenshots, overflow measurements or Lighthouse scores are claimed. Final visual/device review and actual enquiry delivery remain release checks. Existing layouts, CSS classes, typography, content and image frames were retained.
+The initial Chromium download failed; a subsequent packaged Chromium fallback enabled real-browser verification. Mobile/desktop viewport and interaction checks are now recorded in RECHECK_REPORT.md. Lighthouse scores and physical-device results are not claimed. Actual enquiry delivery remains a release check. Existing layouts, CSS classes, typography, content and image frames were retained.
+
+## Full local recheck
+
+See RECHECK_REPORT.md for route, browser, API and interaction coverage and the remaining deployment/content checks. The project-detail route, sitemap, narrow-screen wrapping, two article tables and one invalid Office image URL were repaired during this audit.

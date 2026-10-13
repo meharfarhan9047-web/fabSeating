@@ -150,7 +150,7 @@ export default async function HospitalityPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
               </div>
-              <h2 className="font-serif text-3xl font-bold text-primary-950">Designed For Hospitality Spaces</h2>
+              <h2 className="min-w-0 break-words font-serif text-3xl font-bold text-primary-950">Designed For Hospitality Spaces</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {content.designedFor.map((item, index) => (
@@ -170,7 +170,7 @@ export default async function HospitalityPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h2 className="font-serif text-3xl font-bold">Why Hospitality Brands Trust Us</h2>
+              <h2 className="min-w-0 break-words font-serif text-3xl font-bold">Why Hospitality Brands Trust Us</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {content.whyTrustUs.map((item, index) => (
@@ -208,7 +208,7 @@ export default async function HospitalityPage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                 </div>
-                <h2 className="font-serif text-3xl font-bold text-primary-950">Our Approach</h2>
+                <h2 className="min-w-0 break-words font-serif text-3xl font-bold text-primary-950">Our Approach</h2>
               </div>
               <div className="space-y-3">
                 {content.approach.map((step, index) => (
@@ -225,7 +225,7 @@ export default async function HospitalityPage() {
 
           {/* CTA Section */}
           <div className="bg-gradient-to-r from-primary-100 to-primary-50 rounded-3xl p-8 md:p-12 text-center">
-            <h2 className="font-serif text-3xl font-bold text-primary-950 mb-4">
+            <h2 className="min-w-0 break-words font-serif text-3xl font-bold text-primary-950 mb-4">
               Ready to Elevate Your Guest Experience?
             </h2>
             <p className="text-lg text-primary-700 mb-8 max-w-2xl mx-auto">

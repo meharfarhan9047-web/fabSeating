@@ -150,7 +150,7 @@ export default async function OfficePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
-              <h2 className="font-serif text-3xl font-bold text-primary-950">What We Build For Workspaces</h2>
+              <h2 className="min-w-0 break-words font-serif text-3xl font-bold text-primary-950">What We Build For Workspaces</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {content.whatWeDesign.map((item: string, index: number) => (
@@ -170,7 +170,7 @@ export default async function OfficePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h2 className="font-serif text-3xl font-bold">Built For Growing Teams</h2>
+              <h2 className="min-w-0 break-words font-serif text-3xl font-bold">Built For Growing Teams</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {content.whyChooseUs.map((item: string, index: number) => (
@@ -194,7 +194,7 @@ export default async function OfficePage() {
                 />
               ) : (
                 <Image
-                  src="https://images.unsplash.com/photo-1522071820081-009c2f1deba7?auto=format&fit=crop&w=1200&q=80"
+                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80"
                   alt={content.title}
                   fill
                   className="object-cover"
@@ -208,7 +208,7 @@ export default async function OfficePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                 </div>
-                <h2 className="font-serif text-3xl font-bold text-primary-950">Our Approach</h2>
+                <h2 className="min-w-0 break-words font-serif text-3xl font-bold text-primary-950">Our Approach</h2>
               </div>
               <div className="space-y-3">
                 {content.approach.map((step: string, index: number) => (
@@ -225,7 +225,7 @@ export default async function OfficePage() {
 
           {/* CTA Section */}
           <div className="bg-gradient-to-r from-primary-100 to-primary-50 rounded-3xl p-8 md:p-12 text-center">
-            <h2 className="font-serif text-3xl font-bold text-primary-950 mb-4">
+            <h2 className="min-w-0 break-words font-serif text-3xl font-bold text-primary-950 mb-4">
               Ready to Transform Your Workspace?
             </h2>
             <p className="text-lg text-primary-700 mb-8 max-w-2xl mx-auto">

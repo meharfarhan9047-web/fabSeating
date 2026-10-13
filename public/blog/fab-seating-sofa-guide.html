@@ -45,7 +45,8 @@
     .hero-img { width: 100%; max-height: 280px; overflow: hidden; }
     .hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .article-wrap { max-width: var(--wide); margin: 0 auto; padding: 0 24px 80px; display: grid; grid-template-columns: 1fr min(var(--max-width), 100%) 1fr; }
-    .article-wrap > * { grid-column: 2; }
+    .article-wrap > * { grid-column: 2; min-width: 0; }
+    .table-scroll { max-width: 100%; overflow-x: auto; }
     .intro-block { margin: 56px 0 48px; padding-bottom: 48px; border-bottom: 1px solid var(--sand); }
     .intro-block p { font-size: 1.1rem; color: var(--mid); margin-bottom: 18px; }
     .intro-block p:first-child { font-size: 1.2rem; color: var(--charcoal); font-weight: 500; }
@@ -153,7 +154,7 @@
           <span class="tag">Chennai Climate</span>
         </div>
         <p>The frame is what you're actually buying. Fabric can be reupholstered. Cushions can be replaced. If the frame fails, the sofa is done. In Chennai's coastal climate, humidity puts real pressure on untreated wood — it warps, weakens joints, and creates conditions that certain pests love. A solid hardwood frame with proper treatment will outlast a softwood frame by years.</p>
-        <table aria-label="Frame material comparison">
+        <div class="table-scroll" role="region" tabindex="0" aria-label="Scrollable comparison table"><table aria-label="Frame material comparison">
           <thead><tr><th>Frame Material</th><th>Durability</th><th>Best for</th><th>Notes</th></tr></thead>
           <tbody>
             <tr><td>Kiln-dried teak</td><td>Excellent</td><td>All uses</td><td>Best performer in coastal humidity</td></tr>
@@ -161,7 +162,7 @@
             <tr><td>Sal / Rubber wood</td><td>Good</td><td>Budget builds</td><td>Needs anti-termite treatment in Chennai</td></tr>
             <tr><td>Untreated softwood</td><td>Poor</td><td>Avoid</td><td>Vulnerable to humidity and pests</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p>When in doubt, ask about joinery. A frame held together with proper mortise-and-tenon or dowel joints is fundamentally stronger than one that relies on nails or staples.</p>
       </article>
 

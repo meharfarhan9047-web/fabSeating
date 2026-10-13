@@ -84,6 +84,7 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
       description,
       content,
       images,
+      videoUrl,
       location,
       year,
       category,
