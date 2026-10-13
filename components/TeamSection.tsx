@@ -20,21 +20,18 @@ const HARD_CODED_TEAM: TeamMember[] = [
     name: 'Mr. Gobind Chugani',
     role: 'Founder',
     bio: '“A seasoned industry leader with over 30 years of experience, guiding Fabseating’s vision to create spaces that inspire.”',
-    imageUrl: '/images/team/gobind-chugani.png',
   },
   {
     _id: '2',
     name: 'Mr. Deenu Chugani',
     role: 'Director – Business & Strategy',
     bio: '“A forward-thinking business strategist, driving Fabseating’s growth with innovation and a modern market perspective.”',
-    imageUrl: '/images/team/deenu-chugani.jpg',
   },
   {
     _id: '3',
     name: 'Mr. Haresh',
     role: 'Operations & Client Relations Manager',
     bio: '“A dedicated operations leader, ensuring seamless coordination and consistent quality across every client experience.”',
-    imageUrl: '/images/team/haresh.jpg',
   },
 ]
 
@@ -68,7 +65,6 @@ export const TeamSection = ({ teamMembers: sanityMembers }: { teamMembers?: Team
             const socials = member.socials || {}
             const hasSocials =
               !!(socials.linkedin || socials.twitter || socials.instagram || socials.email)
-            const imageSrc = member.image?.asset ? null : member.imageUrl
             return (
             <div 
               key={member._id} 
@@ -87,14 +83,8 @@ export const TeamSection = ({ teamMembers: sanityMembers }: { teamMembers?: Team
                       sizes="(max-width: 768px) 256px, 288px"
                       className="object-contain transition-transform duration-700 group-hover:scale-105 p-4"
                     />
-                  ) : (
-                    <Image
-                      src={imageSrc || HARD_CODED_TEAM[0].imageUrl!}
-                      alt={member.name}
-                      fill
-                      className="object-contain transition-transform duration-700 group-hover:scale-105 p-4"
-                    />
-                  )}
+                  ) : null
+                  }
                 </div>
               </div>
 

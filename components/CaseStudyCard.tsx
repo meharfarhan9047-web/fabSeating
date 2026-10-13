@@ -59,6 +59,7 @@ export function CaseStudyCard({ project, index = 0, className }: CaseStudyCardPr
             image={getImage()!}
             alt={project.title}
             fill
+            sizes="(max-width: 768px) 100vw, 33vw"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         ) : (project as any).thumbnail ? (
@@ -66,6 +67,7 @@ export function CaseStudyCard({ project, index = 0, className }: CaseStudyCardPr
             src={(project as any).thumbnail} 
             alt={project.title}
             fill
+            sizes="(max-width: 768px) 100vw, 33vw"
             className="object-cover group-hover:scale-110 transition-transform duration-700"
           />
         ) : (

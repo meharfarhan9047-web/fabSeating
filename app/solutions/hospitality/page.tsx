@@ -106,10 +106,10 @@ export default async function HospitalityPage() {
           <div className="space-y-8">
             <div className="grid gap-6 md:gap-8 md:grid-cols-3">
               {[
-                page?.galleryImages?.[0] || page?.heroImage || content.imageOptions[0],
-                page?.galleryImages?.[1] || page?.secondaryImage || page?.heroImage || content.imageOptions[1],
-                page?.galleryImages?.[2] || page?.heroImage || page?.secondaryImage || content.imageOptions[2],
-              ].map((image, index) => (
+                page?.galleryImages?.[0] || page?.heroImage,
+                page?.galleryImages?.[1] || page?.secondaryImage || page?.heroImage,
+                page?.galleryImages?.[2] || page?.heroImage || page?.secondaryImage,
+              ].filter(Boolean).map((image, index) => (
                 <div
                   key={index}
                   className="group relative aspect-[4/3] md:aspect-[3/4] rounded-3xl overflow-hidden shadow-xl ring-1 ring-black/5 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:ring-primary-300/40"
@@ -192,14 +192,8 @@ export default async function HospitalityPage() {
                   fill
                   className="object-cover"
                 />
-              ) : (
-                <Image
-                  src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"
-                  alt={content.title}
-                  fill
-                  className="object-cover"
-                />
-              )}
+              ) : null
+              }
             </div>
             <div className="space-y-6">
               <div className="flex items-center gap-4">

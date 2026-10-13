@@ -85,7 +85,7 @@ export default async function RootLayout({
 }) {
   const settings = await getSiteSettings()
   const logoBuilder = settings?.logo ? urlFor(settings.logo as any) : null
-  const logoUrl = logoBuilder ? logoBuilder.width(440).height(128).url() : null
+  const logoUrl = logoBuilder ? logoBuilder.width(440).fit('max').url() : null
 
   return (
     <html lang="en" className={`${playfair.variable} ${montserrat.variable} luxury-scrollbar`}>

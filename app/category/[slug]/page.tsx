@@ -5,20 +5,20 @@ import { Metadata } from 'next'
 import { PageHero } from '@/components/PageHero'
 import { Section } from '@/components/Section'
 import { waLink } from '@/lib/siteContent'
-import { getSiteSections, DEFAULT_SECTIONS } from '@/lib/siteSections'
+import { getSiteSections } from '@/lib/siteSections'
 import { generateSEOMetadata } from '@/components/SEOHead'
 import { getProductImagesByCategory } from '@/lib/sanity/queries'
 
 
 export async function generateStaticParams() {
   const { categories } = await getSiteSections()
-  const slugs = new Set([...categories, ...DEFAULT_SECTIONS.categories].map((c) => c.slug))
+  const slugs = new Set(categories.map((c) => c.slug))
   return Array.from(slugs, (slug) => ({ slug }))
 }
 
 async function findCategory(slug: string) {
   const { categories } = await getSiteSections()
-  return categories.find((c) => c.slug === slug) || DEFAULT_SECTIONS.categories.find((c) => c.slug === slug)
+  return categories.find((c) => c.slug === slug)
 }
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {

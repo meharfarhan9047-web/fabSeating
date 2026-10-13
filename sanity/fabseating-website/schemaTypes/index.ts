@@ -1,4 +1,5 @@
 import project from '../../schemas/project'
+import articleMedia from '../../schemas/articleMedia'
 import blogPost from '../../schemas/blogPost'
 import siteSettings from '../../schemas/siteSettings'
 import solutionPage from '../../schemas/solutionPage'
@@ -11,6 +12,7 @@ import product from '../../schemas/product'
 import productCategory from '../../schemas/productCategory'
 
 export const schemaTypes = [
+  articleMedia,
   project,
   caseStudy,
   blogPost,

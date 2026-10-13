@@ -273,8 +273,9 @@ export async function getHomePageContent() {
   return client.fetch(
     `*[_type == "homePage" && !(_id in path("drafts.**"))] | order(_id asc)[0] {
       heroImage,
+      "heroVideoUrl": heroVideoFile.asset->url,
       aboutReels[] {
-        videoUrl,
+        "videoUrl": coalesce(videoFile.asset->url, videoUrl),
         posterImage
       },
       solutionsCards[] {

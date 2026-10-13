@@ -33,3 +33,16 @@ The production site was rebuilt and run locally against the published Sanity dat
 - Upload client-approved covers for wardrobes, TV consoles, storage solutions, modular kitchens, wallpapers and doors.
 - Sanity contains project titles X, Y and Z; these were preserved rather than deleting client content. The client can rename or remove them in Studio.
 - Browser viewport emulation does not replace physical Android/iPhone testing. No Lighthouse performance score or measured Core Web Vitals improvement is claimed.
+
+## Additional full visual and CMS media review
+
+- Scrolled 24 routes fully at 390px and 1440px: 48 page scans. No document overflow or JavaScript exceptions. Non-homepage routes had no broken images. The initial homepage media errors were traced to the test browser's missing proxy configuration; a proxy-aware pass confirmed the SVG logo and all videos loaded. Test-only proxy certificate handling did not alter website security settings.
+- Visually inspected viewport captures of the hero, About reels, leadership, furniture, project and contact/solution sections. Tall-page capture artifacts were cross-checked with viewport screenshots and a single visible DOM heading.
+- All five Sanity-hosted videos reached a playable state and advanced their playback time at both widths. There were no video errors or broken homepage images in the final pass.
+- About-reel posters are actual frames from the client's four existing clips. The hero poster and solution secondary images preserve the prior illustrations. Valid uploaded client images were retained.
+- Hero/reel file uploads, poster fields, branding logo, both solution secondary photos and five article illustrations now have Sanity asset references. The article illustration editor is under Article Images; its API serves the existing HTML/CSS templates with the selected image, preserving the article design.
+- All four reels were prepared as H.264/yuv420p with fast-start metadata. Their combined size changed from 126,115,577 bytes to 18,649,298 bytes, approximately 85% smaller. The hero stream also has fast-start metadata. The source footage and layout remain the same.
+- Category cover/brand/product-association fallback behavior was corrected: clearing CMS fields no longer restores built-in media or product associations. Removed categories no longer reappear through built-in category-route defaults. Tests cover these empty-field cases.
+- Website and updated Studio production builds passed. Private write-token scanning of browser assets passed.
+
+The local frontend reads the client's published remote Sanity dataset. Merge and deploy the updated website and Studio to release the new editors and rendering. Six missing category covers still require client-approved photographs. Real email delivery and physical-device performance remain unverified.

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ResponsiveImage } from './ResponsiveImage'
+import { LazyVideo } from './LazyVideo'
 import { Container } from './Container'
 import type { SanityImage } from '@/types'
 
@@ -41,10 +42,8 @@ export function HomeHero({
   }
 
   const heroData = { ...defaultData, ...data }
-  const fallbackPoster = heroPoster ||
-    'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=80'
+  const fallbackPoster = heroPoster || ''
   
-  const defaultHeroVideo = '/hero-video.mp4'
 
   type HeroSlide = { src?: string; title?: string; poster?: string }
   const slides: HeroSlide[] =
@@ -52,7 +51,7 @@ export function HomeHero({
       ? heroVideos
       : videoUrl
       ? [{ src: videoUrl, poster: fallbackPoster }]
-      : [{ src: defaultHeroVideo, poster: fallbackPoster }]
+      : [{ poster: fallbackPoster }]
 
   return (
     <section className="relative pt-[6rem] sm:pt-[7rem] md:pt-[7.5rem] lg:pt-[8rem] mt-2 md:mt-4 pb-12 md:pb-16">
@@ -74,17 +73,10 @@ export function HomeHero({
                     }}
                   >
                     {slide.src ? (
-                      <video
+                      <LazyVideo
                         className="h-full w-full object-cover"
                         src={slide.src}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="metadata"
-                        crossOrigin="anonymous"
                         poster={(slide as any).poster || fallbackPoster}
-                        style={{ objectFit: 'cover' }}
                       />
                     ) : heroData.image ? (
                       <ResponsiveImage

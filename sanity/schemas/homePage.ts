@@ -3,6 +3,7 @@ export default {
   title: 'Homepage',
   type: 'document',
   fields: [
+    { name: 'heroVideoFile', title: 'Hero video upload', type: 'file', options: { accept: 'video/*' } },
     {
       name: 'galleryImages',
       title: 'Main Gallery Photos',
@@ -25,7 +26,8 @@ export default {
         {
           type: 'object',
           fields: [
-            { name: 'videoUrl', title: 'Video URL', type: 'url', description: 'e.g. /videos/video1.mp4 or full URL' },
+            { name: 'videoFile', title: 'Video upload', type: 'file', options: { accept: 'video/*' } },
+            { name: 'videoUrl', title: 'External video URL (optional)', type: 'url', description: 'Used when no uploaded video is selected.' },
             { name: 'posterImage', title: 'Poster / thumbnail image', type: 'image', options: { hotspot: true } },
           ],
           preview: {

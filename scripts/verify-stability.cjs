@@ -103,4 +103,23 @@ async function checkProjectRoutes() {
   console.log('PASS project routes: CMS project renders, case-study alias redirects, unknown slug returns not-found')
 }
 
-Promise.resolve().then(checkEnquiry).then(checkWorker).then(checkProjectRoutes).catch((error) => { console.error(error); process.exitCode = 1 })
+async function checkHomeMedia() {
+  let raw = { brandPartners: [], furnitureCategories: [] }
+  const fallback = { slug: 'sofas', title: 'Sofas', cover: '/local-photo.jpg', imageDirs: ['sofas'] }
+  const box = { exports: {}, process: { env: { NEXT_PUBLIC_SANITY_PROJECT_ID: 'test' } }, require(name) {
+    if (name === './sanity/client') return { client: { fetch: async () => raw } }
+    if (name === './siteContent') return { CATEGORIES: [fallback], BRAND_PARTNERS: [{ name: 'Local', logo: '/local-logo.png' }], CONTACT: { reviewsUrl: '/reviews' }, FAQS: [], INDUSTRIES: [] }
+    throw Error(name)
+  } }
+  vm.runInNewContext(ts.transpileModule(fs.readFileSync('lib/siteSections.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText, box)
+  let result = await box.exports.getSiteSections()
+  assert.equal(result.categories.length, 0)
+  assert.equal(result.brandPartners.length, 0)
+  raw = { furnitureCategories: [{ title: 'Sofas', slug: 'sofas', cover: null, productCategorySlugs: [] }] }
+  result = await box.exports.getSiteSections()
+  assert.equal(result.categories[0].cover, null)
+  assert.equal(result.categories[0].productCategorySlugs.length, 0)
+  console.log('PASS CMS removal: categories, brands, covers and product associations stay empty')
+}
+
+Promise.resolve().then(checkEnquiry).then(checkWorker).then(checkProjectRoutes).then(checkHomeMedia).catch((error) => { console.error(error); process.exitCode = 1 })

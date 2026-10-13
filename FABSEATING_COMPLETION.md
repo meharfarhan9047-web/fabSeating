@@ -73,3 +73,9 @@ The initial Chromium download failed; a subsequent packaged Chromium fallback en
 ## Full local recheck
 
 See RECHECK_REPORT.md for route, browser, API and interaction coverage and the remaining deployment/content checks. The project-detail route, sitemap, narrow-screen wrapping, two article tables and one invalid Office image URL were repaired during this audit.
+
+## Additional media editors
+
+Homepage: Hero video upload, Hero background image and About section → Video upload / Poster image. Site Settings: Logo. Solutions: Secondary Image. Article Images: select an existing article and replace its illustration. These fields read published Sanity content; the website uses CMS-hosted assets. Updated Studio deployment is required.
+
+`node scripts/migrate-visible-media-to-sanity.cjs --commit` prepares missing legacy media fields and requires ffmpeg for video poster extraction. It retains valid client media. The deployed references were additionally optimized for web playback; source clips are retained in the repository.

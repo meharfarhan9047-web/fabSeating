@@ -2,8 +2,8 @@ import { client } from './sanity/client'
 import { BRAND_PARTNERS, CATEGORIES, CONTACT, FAQS, INDUSTRIES, type Category } from './siteContent'
 
 // Content for the homepage sections (categories, partners, industries, FAQ,
-// Google reviews). Comes from the Sanity "Homepage" document; any field left
-// empty in Sanity falls back to the built-in defaults in lib/siteContent.ts.
+// Google reviews). Images, brands and category associations are controlled by
+// the published Homepage document. Empty CMS media fields stay empty.
 
 export type SiteCategory = Category & {
   /** Sanity productCategory slugs whose products are listed on /category/<slug>. */
@@ -81,9 +81,9 @@ export async function getSiteSections(): Promise<SiteSections> {
       { next: { revalidate: 300, tags: ['sanity', 'sanity:homePage'] } } as any,
     )
   } catch {
-    return DEFAULT_SECTIONS
+    return { ...DEFAULT_SECTIONS, categories: [], brandPartners: [] }
   }
-  if (!raw) return DEFAULT_SECTIONS
+  if (!raw) return { ...DEFAULT_SECTIONS, categories: [], brandPartners: [] }
 
   const partners = (raw.brandPartners || [])
     .filter((b) => b?.name && b.logo)
@@ -98,9 +98,9 @@ export async function getSiteSections(): Promise<SiteSections> {
         slug: c.slug!,
         title: c.title!,
         blurb: c.blurb || fallback?.blurb || '',
-        cover: c.cover || fallback?.cover || null,
+        cover: c.cover || null,
         imageDirs: fallback?.imageDirs || [],
-        productCategorySlugs: refs.length ? refs : fallback?.productCategorySlugs || [],
+        productCategorySlugs: refs,
       }
     })
 
@@ -110,8 +110,8 @@ export async function getSiteSections(): Promise<SiteSections> {
     .map((f) => ({ q: f.question!, a: f.answer! }))
 
   return {
-    categories: categories.length ? categories : DEFAULT_SECTIONS.categories,
-    brandPartners: partners.length ? partners : DEFAULT_SECTIONS.brandPartners,
+    categories,
+    brandPartners: partners,
     industries: industries.length ? industries : DEFAULT_SECTIONS.industries,
     faqs: faqs.length ? faqs : DEFAULT_SECTIONS.faqs,
     reviewsUrl: raw.googleReviewsUrl || DEFAULT_SECTIONS.reviewsUrl,

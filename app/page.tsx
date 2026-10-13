@@ -92,12 +92,11 @@ export default async function Home() {
   const trustLine = 'Crafted & curated from our Chennai facility | Serving residential & commercial spaces across South India'
 
   // About reels: from Sanity or fallback (with poster URL for Sanity images)
-  const aboutReels = (homeContent?.aboutReels?.length ? homeContent.aboutReels : defaultReels).map((reel: any, i: number) => {
-    const fallback = defaultReels[i] || defaultReels[0]
-    const videoUrl = reel.videoUrl ?? fallback?.videoUrl ?? ''
+  const aboutReels = (homeContent?.aboutReels || []).map((reel: any, i: number) => {
+    const videoUrl = reel.videoUrl || ''
     const posterImage = reel.posterImage
     const posterBuilder = posterImage ? urlFor(posterImage) : null
-    const posterUrl = posterBuilder ? posterBuilder.width(800).height(1422).url() : (reel.thumbnail ?? fallback?.thumbnail ?? '')
+    const posterUrl = posterBuilder ? posterBuilder.width(800).height(1422).url() : ''
     return { id: i + 1, videoUrl, posterUrl, posterImage }
   })
 
@@ -163,13 +162,15 @@ export default async function Home() {
     <main className="flex min-h-screen flex-col overflow-hidden">
       {/* 1. Hero Section */}
       <HomeHero
+        videoUrl={homeContent?.heroVideoUrl}
         heroPoster={homeContent?.heroImage ? urlFor(homeContent.heroImage)?.width(1600).auto('format').url() : undefined}
         headline={heroHeadline}
         trustIndicators={['Crafted & curated from our Chennai facility', 'Serving residential & commercial spaces across South India']}
         brands={['Premium Quality', '20+ Years Experience', 'Custom Solutions']}
         data={{
           ctaText: primaryCta,
-          ctaLink: '/contact'
+          ctaLink: '/contact',
+          image: homeContent?.heroImage
         }}
       />
 
@@ -334,22 +335,11 @@ export default async function Home() {
           
           {/* Grid Layout */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            {projectsToDisplay.length > 0 ? (
-              projectsToDisplay.map((item: any, index: number) => (
-                <AnimatedCard key={item._id} index={index}>
-                  <CaseStudyCard 
-                    project={item} 
-                    index={index} 
-                  />
-                </AnimatedCard>
-              ))
-            ) : (
-              dummyCaseStudies.map((project, index) => (
-                <AnimatedCard key={project._id} index={index}>
-                  <CaseStudyCard project={project as any} index={index} />
-                </AnimatedCard>
-              ))
-            )}
+            {projectsToDisplay.map((item: any, index: number) => (
+              <AnimatedCard key={item._id} index={index}>
+                <CaseStudyCard project={item} index={index} />
+              </AnimatedCard>
+            ))}
           </div>
           
           {/* CTA Button */}
