@@ -1,8 +1,6 @@
 import { getSolutionPage } from '@/lib/sanity/queries'
 import { ResponsiveImage } from '@/components/ResponsiveImage'
-import { listImageFiles } from '@/lib/localImages'
 import { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { PageHero } from '@/components/PageHero'
 import { Section } from '@/components/Section'
@@ -16,18 +14,6 @@ export const metadata: Metadata = generateSEOMetadata({
   description: 'Custom furniture and complete home furnishing solutions in Chennai — sofas, beds, wardrobes, dining sets, curtains and rugs, designed around your life.',
   path: '/solutions/residential',
 })
-
-function galleryImages(dirs: string[], limit = 12) {
-  const out: string[] = []
-  for (const dir of dirs) {
-    try {
-      for (const f of listImageFiles(dir)) {
-        if (/\.(png|jpe?g|webp|avif)$/i.test(f)) out.push(`/images/${dir}/${f}`)
-      }
-    } catch {}
-  }
-  return out.slice(0, limit)
-}
 
 const WHAT_WE_DESIGN = [
   ['Living Room Furniture', 'Sofas, lounge chairs, centre tables, TV units.'],
@@ -61,7 +47,7 @@ const APPROACH = [
 
 export default async function ResidentialPage() {
   const page = await getSolutionPage('residential')
-  const homes = page?.galleryImages?.length ? page.galleryImages : galleryImages(['gallery/case-study-murugan-kilpauk', 'gallery/case-study-kothari-nungambakkam', 'gallery'], 12)
+  const homes = page?.galleryImages ?? []
   const hero = homes.slice(0, 3)
 
   return (

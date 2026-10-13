@@ -52,3 +52,7 @@ The remaining categories without matching photographs retain clear placeholders 
 Run `npm ci`, `npx tsc --noEmit` and `npm run build` at the project root. Run `npm ci` and `npm run build` in the Studio directory.
 
 Verification covers real Sanity responses, case-study filter results including empty sectors, all three case-study routes, product-gallery thumbnail interaction, residential gallery output and CMS category/logo rendering. Browser-bundle scanning checks that the write token is absent. Live deployment/browser verification depends on the client's preview deployment becoming available.
+
+## Additional empty-gallery fixes
+
+Category collections and the Residential solution gallery now use Sanity images exclusively. Clearing products or gallery photos no longer restores repository images. Category pages show their existing collection-coming-soon state, and empty Residential image sections are hidden. Six category covers still require client-approved photographs: wardrobes, TV consoles, storage solutions, modular kitchens, wallpapers and doors.
