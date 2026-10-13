@@ -1,3 +1,5 @@
+import { LazyVideo } from './LazyVideo'
+
 interface VideoCardProps {
   src: string
   title?: string
@@ -20,15 +22,9 @@ export function VideoCard({ src, title, rounded = 'lg', aspect = 'aspect-[4/5]',
       }}
     >
       <div className={`${aspect} w-full overflow-hidden`}>
-        <video
+        <LazyVideo
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           src={src}
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          crossOrigin="anonymous"
           poster={poster || defaultPoster}
         />
       </div>

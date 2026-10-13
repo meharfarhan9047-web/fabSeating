@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ResponsiveImage } from './ResponsiveImage'
+import { LazyVideo } from './LazyVideo'
 import type { SanityImage } from '@/types'
 
 interface HomeHeroCoralProps {
@@ -71,17 +72,10 @@ export function HomeHeroCoral({
                     }}
                   >
                     {slide.src ? (
-                      <video
+                      <LazyVideo
                         className="h-full w-full object-cover"
                         src={slide.src}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="auto"
-                        crossOrigin="anonymous"
                         poster={(slide as any).poster || fallbackPoster}
-                        style={{ objectFit: 'cover' }}
                       />
                     ) : heroData.image ? (
                       <ResponsiveImage

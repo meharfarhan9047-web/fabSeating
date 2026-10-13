@@ -30,9 +30,31 @@ export function Header({ logoUrl }: { logoUrl?: string | null }) {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20)
     }
-    window.addEventListener('scroll', handleScroll)
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  useEffect(() => { setIsMobileMenuOpen(false) }, [pathname])
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false)
+    }
+    const desktop = window.matchMedia('(min-width: 768px)')
+    const closeOnDesktop = () => { if (desktop.matches) setIsMobileMenuOpen(false) }
+    closeOnDesktop()
+    desktop.addEventListener('change', closeOnDesktop)
+    window.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      desktop.removeEventListener('change', closeOnDesktop)
+      window.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [isMobileMenuOpen])
 
   return (
     <header
@@ -160,6 +182,8 @@ export function Header({ logoUrl }: { logoUrl?: string | null }) {
             className="md:hidden relative z-[80] p-2 -mr-2 text-primary-950 hover:bg-primary-50 rounded-full transition-colors cursor-pointer"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation"
           >
             <div className="w-6 h-5 flex flex-col justify-between pointer-events-none">
               <span
@@ -199,6 +223,7 @@ export function Header({ logoUrl }: { logoUrl?: string | null }) {
             
             {/* Side Panel */}
             <motion.div
+              id="mobile-navigation"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}

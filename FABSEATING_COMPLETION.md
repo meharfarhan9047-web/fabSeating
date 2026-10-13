@@ -56,3 +56,16 @@ Verification covers real Sanity responses, case-study filter results including e
 ## Additional empty-gallery fixes
 
 Category collections and the Residential solution gallery now use Sanity images exclusively. Clearing products or gallery photos no longer restores repository images. Category pages show their existing collection-coming-soon state, and empty Residential image sections are hidden. Six category covers still require client-approved photographs: wardrobes, TV consoles, storage solutions, modular kitchens, wallpapers and doors.
+
+## Stability improvements (no design changes)
+
+- Hero and card videos use the existing lazy video component. They attach media near the viewport and pause outside it or while the document is hidden, preserving posters, frames and styling.
+- Header scroll observation is passive and initializes correctly after scroll restoration. Mobile navigation locks background scrolling and closes on Escape, route changes and desktop resizing.
+- Service-worker registration works even after the window load event. Development cleanup touches only FabSeating caches. Native install prompts are no longer suppressed without an install action.
+- The worker caches only public HTML navigations, excludes APIs/admin/Next.js data requests, limits offline pages to 30 and returns a valid error response for uncached offline pages. Old FabSeating caches are removed on activation.
+- Enquiries return 503 if delivery is not configured and 502 on provider rejection; they no longer falsely report success. The form prevents duplicate in-flight submits and times out after 30 seconds. Verify RESEND_API_KEY and the verified fabseating.com sender before release; real delivery was not tested.
+- Review requests cancel on unmount; reveal sections remain visible on browsers without IntersectionObserver. The manifest header no longer caches an editable manifest for a year.
+
+Validation: production Next.js build (including lint/type checks) passed with the published Sanity dataset; eight production routes returned HTTP 200. `node scripts/verify-stability.cjs` passed enquiry and worker regressions. DOM interaction checks passed mobile-menu scroll locking/Escape/desktop resize and lazy video loading/play/pause. No external email was sent.
+
+Limitation: Chromium download failed in this environment, so no rendered mobile/desktop screenshots, overflow measurements or Lighthouse scores are claimed. Final visual/device review and actual enquiry delivery remain release checks. Existing layouts, CSS classes, typography, content and image frames were retained.

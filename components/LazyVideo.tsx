@@ -15,21 +15,23 @@ interface LazyVideoProps {
  */
 export function LazyVideo({ src, poster, className }: LazyVideoProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [active, setActive] = useState(false)
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     const el = ref.current
     if (!el) return
     if (typeof IntersectionObserver === 'undefined') {
       setActive(true)
+      setVisible(true)
       return
     }
     const io = new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setActive(true)
-          io.disconnect()
-        }
+        const inView = entries.some((e) => e.isIntersecting)
+        if (inView) setActive(true)
+        setVisible(inView)
       },
       { rootMargin: '200px' }
     )
@@ -37,10 +39,26 @@ export function LazyVideo({ src, poster, className }: LazyVideoProps) {
     return () => io.disconnect()
   }, [])
 
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const updatePlayback = () => {
+      if (visible && !document.hidden) void video.play().catch(() => {})
+      else video.pause()
+    }
+    updatePlayback()
+    document.addEventListener('visibilitychange', updatePlayback)
+    return () => {
+      document.removeEventListener('visibilitychange', updatePlayback)
+      video.pause()
+    }
+  }, [active, visible, src])
+
   return (
     <div ref={ref} className="h-full w-full">
       {active ? (
         <video
+          ref={videoRef}
           className={className}
           src={src}
           poster={poster}

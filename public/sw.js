@@ -1,60 +1,45 @@
-// Service Worker for Fab Seating PWA
-const CACHE_NAME = 'fabseating-v2'
-const urlsToCache = [
-  '/',
-  '/projects',
-  '/contact',
-  '/solutions/residential',
-  '/solutions/office',
-  '/solutions/hospitality',
-  '/logo.png',
-]
+// Cache only full public HTML navigations, never Next.js RSC/prefetch responses.
+const CACHE_NAME = 'fabseating-v3'
+const MAX_PAGES = 30
 
-// Install event - cache resources
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(urlsToCache)
-    })
-  )
-  self.skipWaiting()
+  event.waitUntil(self.skipWaiting())
 })
 
-// Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName)
-          }
-        })
-      )
-    })
-  )
-  self.clients.claim()
+  event.waitUntil((async () => {
+    const names = await caches.keys()
+    await Promise.all(names.filter((name) => name.startsWith('fabseating-') && name !== CACHE_NAME).map((name) => caches.delete(name)))
+    await self.clients.claim()
+  })())
 })
 
-// Fetch event - network first for pages (so updates show immediately),
-// cache used only as an offline fallback. Media and Next.js assets are not intercepted.
 self.addEventListener('fetch', (event) => {
-  const req = event.request
-  if (req.method !== 'GET') return
-  const url = new URL(req.url)
-  if (url.origin !== self.location.origin) return
-  if (url.pathname.startsWith('/api/') || url.pathname.startsWith('/_next/')) return
-  if (/\.(mp4|webm|mov)$/i.test(url.pathname) || req.headers.has('range')) return
-
-  event.respondWith(
-    fetch(req)
-      .then((res) => {
-        if (res && res.status === 200 && res.type === 'basic') {
-          const copy = res.clone()
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy))
-        }
-        return res
-      })
-      .catch(() => caches.match(req))
-  )
+  const request = event.request
+  const url = new URL(request.url)
+  if (request.method !== 'GET' || request.mode !== 'navigate' || url.origin !== self.location.origin) return
+  if (/^\/(api|admin|_next)(\/|$)/.test(url.pathname) || request.headers.has('range')) return
+  // Query variants must not accumulate unbounded offline copies.
+  const key = url.origin + url.pathname
+  let save = Promise.resolve()
+  const response = (async () => {
+    try {
+      const result = await fetch(request)
+      if (result.ok && !result.redirected && result.headers.get('content-type')?.includes('text/html') && !/private|no-store/i.test(result.headers.get('cache-control') || '')) {
+        const copy = result.clone()
+        save = (async () => {
+          const cache = await caches.open(CACHE_NAME)
+          await cache.put(key, copy)
+          const keys = await cache.keys()
+          await Promise.all(keys.slice(0, Math.max(0, keys.length - MAX_PAGES)).map((entry) => cache.delete(entry)))
+        })().catch(() => {})
+      }
+      return result
+    } catch {
+      const cached = await (await caches.open(CACHE_NAME)).match(key)
+      return cached || Response.error()
+    }
+  })()
+  event.respondWith(response)
+  event.waitUntil(response.then(() => save).catch(() => {}))
 })

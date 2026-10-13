@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { trackEvent, trackConversion } from '@/lib/analytics'
 import { cn } from '@/lib/utils'
 
@@ -20,15 +20,21 @@ export function EnquiryForm({ productId, projectId, originPage, className }: Enq
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const submitting = useRef(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (submitting.current) return
+    submitting.current = true
     setIsSubmitting(true)
     setSubmitStatus('idle')
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 30000)
 
     try {
       const response = await fetch('/api/enquiry', {
         method: 'POST',
+        signal: controller.signal,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
@@ -49,6 +55,8 @@ export function EnquiryForm({ productId, projectId, originPage, className }: Enq
     } catch (error) {
       setSubmitStatus('error')
     } finally {
+      window.clearTimeout(timeout)
+      submitting.current = false
       setIsSubmitting(false)
     }
   }

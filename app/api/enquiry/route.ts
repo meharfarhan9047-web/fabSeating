@@ -40,13 +40,19 @@ ${data.message}
     `.trim()
 
     const resend = getResend()
-    if (resend && process.env.RESEND_API_KEY) {
-      await resend.emails.send({
-        from: 'FabSeating <noreply@fabseating.com>',
-        to: 'info@fabseating.com',
-        subject: `New Enquiry from ${data.name}`,
-        text: emailContent,
-      })
+    if (!resend) {
+      return NextResponse.json({ error: 'Enquiry delivery is temporarily unavailable' }, { status: 503 })
+    }
+    const { error } = await resend.emails.send({
+      from: 'FabSeating <noreply@fabseating.com>',
+      to: 'info@fabseating.com',
+      subject: `New Enquiry from ${data.name}`,
+      text: emailContent,
+      replyTo: data.email,
+    })
+    if (error) {
+      console.error('Enquiry delivery failed:', error.name)
+      return NextResponse.json({ error: 'Failed to send enquiry' }, { status: 502 })
     }
 
     return NextResponse.json({ success: true })

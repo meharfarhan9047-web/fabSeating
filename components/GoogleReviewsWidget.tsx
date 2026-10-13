@@ -18,22 +18,27 @@ export function GoogleReviewsWidget({ maxReviews = 4 }: { maxReviews?: number })
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const controller = new AbortController()
+    let mounted = true
+    setLoading(true)
     async function fetchReviews() {
       try {
-        const response = await fetch('/api/google-reviews')
+        const response = await fetch('/api/google-reviews', { signal: controller.signal })
+        if (!response.ok) throw new Error('Reviews request failed')
         const data = await response.json()
 
-        if (data.reviews && Array.isArray(data.reviews)) {
+        if (mounted && data.reviews && Array.isArray(data.reviews)) {
           setReviews(data.reviews.slice(0, maxReviews))
         }
       } catch (error) {
-        console.error('Error fetching Google Reviews:', error)
+        if (mounted) setReviews([])
       } finally {
-        setLoading(false)
+        if (mounted) setLoading(false)
       }
     }
 
     fetchReviews()
+    return () => { mounted = false; controller.abort() }
   }, [maxReviews])
 
   if (loading) {
