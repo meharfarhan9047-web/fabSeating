@@ -1,3 +1,13 @@
+# Follow-up: Main Gallery (/projects)
+
+The main Gallery page now reads **Homepage → Main Gallery Photos** from Sanity. It no longer reads local image folders. All 74 existing Gallery files were imported as 68 unique editable images. Drag to reorder, add or delete photos, then Publish. An empty gallery stays empty rather than reverting to repository photos.
+
+Deploy both the website and updated Sanity Studio after merging this follow-up so the editor field appears. The existing homepage webhook invalidates the Gallery; a five-minute revalidation interval is also configured.
+
+The import command is `node scripts/seed-main-gallery-to-sanity.js --commit`. It only populates a missing field, preserving existing edits and intentional empty galleries.
+
+---
+
 # FabSeating CMS and gallery completion
 
 ## Behavior

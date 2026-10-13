@@ -148,6 +148,7 @@ export interface FAQ {
 }
 
 export interface SanityImage {
+  _key?: string
   _type: 'image'
   asset: {
     _ref: string

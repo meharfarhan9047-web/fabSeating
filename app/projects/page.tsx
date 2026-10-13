@@ -1,15 +1,13 @@
-import { listImageFiles } from '@/lib/localImages'
 import { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { PageHero } from '@/components/PageHero'
 import { Section } from '@/components/Section'
-import { getProjects } from '@/lib/sanity/queries'
+import { getProjects, getMainGalleryImages } from '@/lib/sanity/queries'
 import { generateSEOMetadata } from '@/components/SEOHead'
 import { AnimatedCard } from '@/components/AnimatedCard'
 import { ResponsiveImage } from '@/components/ResponsiveImage'
 
-export const revalidate = 900
+export const revalidate = 300
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Gallery',
@@ -17,25 +15,8 @@ export const metadata: Metadata = generateSEOMetadata({
   path: '/projects',
 })
 
-function galleryImages(dirs: string[]) {
-  const out: string[] = []
-  for (const dir of dirs) {
-    try {
-      for (const f of listImageFiles(dir)) {
-        if (/\.(png|jpe?g|webp|avif)$/i.test(f)) out.push(`/images/${dir}/${f}`)
-      }
-    } catch {}
-  }
-  return out
-}
-
 export default async function GalleryPage() {
-  const projects = await getProjects()
-  const images = galleryImages([
-    'gallery/case-study-murugan-kilpauk',
-    'gallery/case-study-kothari-nungambakkam',
-    'gallery',
-  ])
+  const [projects, images] = await Promise.all([getProjects(), getMainGalleryImages()])
 
   return (
     <>
@@ -46,7 +27,7 @@ export default async function GalleryPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {projects.map((project, index) => (
               <AnimatedCard key={project._id} index={index}>
-                <Link href={`/case-studies/${project.slug.current}`} className="group relative block aspect-square overflow-hidden rounded-xl bg-gray-100">
+                <Link href={`/projects/${project.slug.current}`} className="group relative block aspect-square overflow-hidden rounded-xl bg-gray-100">
                   {project.images && project.images[0] ? (
                     <ResponsiveImage image={project.images[0]} alt={project.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                   ) : (
@@ -65,18 +46,17 @@ export default async function GalleryPage() {
           </div>
         )}
 
-        {/* Photo gallery (masonry) */}
+        {/* Main Gallery photos from the published Sanity Homepage document */}
         {images.length > 0 ? (
-          <div className="columns-2 md:columns-3 lg:columns-4 gap-4 [&>*]:mb-4">
-            {images.map((src, i) => (
-              <div key={i} className="relative overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5 break-inside-avoid group">
-                <Image
-                  src={src}
-                  alt={`Fab Seating gallery ${i + 1}`}
-                  width={800}
-                  height={1000}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {images.map((image, i) => (
+              <div key={image._key || `${image.asset?._ref}-${i}`} className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-md ring-1 ring-black/5 group">
+                <ResponsiveImage
+                  image={image}
+                  alt={image.alt || `Fab Seating gallery ${i + 1}`}
+                  fill
                   sizes="(max-width:768px) 50vw, 25vw"
-                  className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
             ))}

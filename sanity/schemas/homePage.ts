@@ -4,6 +4,13 @@ export default {
   type: 'document',
   fields: [
     {
+      name: 'galleryImages',
+      title: 'Main Gallery Photos',
+      type: 'array',
+      description: 'Photos shown on /projects (Gallery). Drag to reorder, add or remove photos, then Publish. No local photo fallback is used.',
+      of: [{ type: 'image', options: { hotspot: true }, fields: [{ name: 'alt', title: 'Image description', type: 'string' }] }],
+    },
+    {
       name: 'heroImage',
       title: 'Hero background image',
       type: 'image',

@@ -406,3 +406,13 @@ export async function getProductImagesByCategory(categorySlugs: string[]): Promi
     return []
   }
 }
+
+/** Only published CMS images appear on the main Gallery page. An empty list stays empty. */
+export async function getMainGalleryImages(): Promise<import('@/types').SanityImage[]> {
+  if (!isSanityConfigured()) return []
+  return client.fetch(
+    `*[_type == "homePage" && !(_id in path("drafts.**"))] | order(_id asc)[0].galleryImages[defined(asset)]`,
+    {},
+    { next: { revalidate: 300, tags: ['sanity', 'sanity:homePage'] } } as any,
+  ).then((images: import('@/types').SanityImage[] | null) => images || [])
+}
